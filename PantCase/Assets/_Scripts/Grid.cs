@@ -8,14 +8,15 @@ public class Grid
     public int width;
     public int height;
     public float cellSize;
-
+    public Vector3 pivot;
     public Cell[,] grid;
 
-    public Grid(int width, int height, float cellSize)
+    public Grid(int width, int height, float cellSize, Vector3 pivot)
     {
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
+        this.pivot = pivot;
 
         grid = new Cell[width, height];
         for (int x = 0; x < grid.GetLength(0); x++)
@@ -27,14 +28,29 @@ public class Grid
         }
     }
 
+
+    public bool IsInGrid(Vector3 worldPos)
+    {
+        Vector2Int gridPosition = GetGridPosition(worldPos);
+
+        if (gridPosition.x < 0 || gridPosition.x >= width || gridPosition.y < 0 || gridPosition.y >= height)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     public Vector3 GetWorldPosition(int x, int y)
     {
-        return new Vector3(x, y, 0) * cellSize;
+        return new Vector3(x, y, 0) * cellSize + new Vector3(cellSize, cellSize, 0) * 0.5f;
     }
 
     public Vector3 GetWorldPosition(Vector2Int gridPosition)
     {
-        return new Vector3(gridPosition.x, gridPosition.y, 0) * cellSize;
+        return new Vector3(gridPosition.x, gridPosition.y, 0) * cellSize + new Vector3(cellSize, cellSize, 0) * 0.5f;
     }
 
     public Vector2Int GetGridPosition(Vector3 worldPosition)
@@ -68,6 +84,7 @@ public class Grid
 
         return canPlace;
     }
+
 
     public void DrawGrid()
     {
