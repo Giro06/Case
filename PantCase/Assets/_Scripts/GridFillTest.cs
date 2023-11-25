@@ -6,6 +6,9 @@ namespace _Scripts
 {
     public class GridFillTest : MonoBehaviour
     {
+        public GridObjectView gridObjectViewPrefab;
+        public GridObjectData gridObjectData;
+
         public void Update()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -13,13 +16,8 @@ namespace _Scripts
 
             if (Input.GetMouseButtonDown(0))
             {
-                Vector2Int gridPos = GridManager.Instance.grid.GetGridPosition(mousePos);
-
-                Debug.Log("Mouse pos: " + mousePos + "//  Grid Pos: " + gridPos);
-                if (GridManager.Instance.grid.IsInGrid(mousePos))
-                {
-                    GridManager.Instance.grid.grid[gridPos.x, gridPos.y].CellState = CellState.Filled;
-                }
+                GridObjectView gridObjectView = Instantiate(gridObjectViewPrefab, mousePos, Quaternion.identity);
+                gridObjectView.Initialize(gridObjectData);
             }
         }
     }

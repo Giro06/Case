@@ -18,11 +18,7 @@ public class GridManager : Singleton<GridManager>
         InitializeGrid(width, height, cellSize, pivot);
         CreaateGridView();
     }
-
-    public void LateUpdate()
-    {
-    }
-
+    
     public void InitializeGrid(int width, int height, float cellSize, Vector3 pivot)
     {
         grid = new Grid(width, height, cellSize, pivot);

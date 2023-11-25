@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using _Scripts;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
+[Serializable]
 public class Grid
 {
     public int width;
@@ -85,6 +88,23 @@ public class Grid
         return canPlace;
     }
 
+    public void PlaceOnGrid(Vector2Int gridPivot, Vector2Int size, GridObject cellObject)
+    {
+        for (int x = gridPivot.x; x < gridPivot.x + size.x; x++)
+        {
+            for (int y = gridPivot.y; y < gridPivot.y + size.y; y++)
+            {
+                grid[x, y].CellObject = cellObject;
+                grid[x, y].CellState = CellState.Filled;
+            }
+        }
+    }
+
+    public void SetCell(Vector2Int gridPos, GridObject cellObject)
+    {
+        grid[gridPos.x, gridPos.y].CellObject = cellObject;
+        grid[gridPos.x, gridPos.y].CellState = CellState.Filled;
+    }
 
     public void DrawGrid()
     {
@@ -112,12 +132,20 @@ public class Grid
 public class Cell
 {
     private CellState _cellState;
+    private GridObject _cellObject;
 
     public CellState CellState
     {
         get => _cellState;
         set => _cellState = value;
     }
+
+    public GridObject CellObject
+    {
+        get => _cellObject;
+        set => _cellObject = value;
+    }
+
 
     public bool CanMove()
     {
