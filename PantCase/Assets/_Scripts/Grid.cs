@@ -134,6 +134,12 @@ public class Cell
     private CellState _cellState;
     private GridObject _cellObject;
 
+
+    public Cell()
+    {
+        _cellState = CellState.Empty;
+    }
+
     public CellState CellState
     {
         get => _cellState;
