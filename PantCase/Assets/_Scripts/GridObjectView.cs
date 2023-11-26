@@ -6,9 +6,8 @@ using UnityEngine;
 public class GridObjectView : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
-
     private GridObjectData _gridObjectData;
-
+    private Vector2Int _placementPivot;
     public bool followCursor;
 
     public void Initialize(GridObjectData gridObjectData)
@@ -61,13 +60,37 @@ public class GridObjectView : MonoBehaviour
             {
                 if (canPlace)
                 {
+                    _placementPivot = gridPoint;
                     followCursor = false;
-                    GridObject gridObject = new GridObject
+
+                    switch (_gridObjectData.objectType)
                     {
-                        view = gameObject,
-                        gridObjectData = _gridObjectData
-                    };
-                    GridManager.Instance.grid.PlaceOnGrid(gridPoint, _gridObjectData.size, gridObject);
+                        case ObjectType.ActiveBuilding:
+                            ActiveBuilding activeBuilding = new ActiveBuilding();
+                            activeBuilding.productionData = _gridObjectData.productionData;
+                            activeBuilding.view = gameObject;
+                            activeBuilding.gridObjectData = _gridObjectData;
+                            activeBuilding.gridPivot = _placementPivot;
+                            GridManager.Instance.grid.PlaceOnGrid(gridPoint, _gridObjectData.size, activeBuilding);
+
+                            break;
+                        case ObjectType.PassiveBuilding:
+                            PassiveBuilding passiveBuilding = new PassiveBuilding();
+                            passiveBuilding.view = gameObject;
+                            passiveBuilding.gridObjectData = _gridObjectData;
+                            passiveBuilding.gridPivot = _placementPivot;
+                            GridManager.Instance.grid.PlaceOnGrid(gridPoint, _gridObjectData.size, passiveBuilding);
+                            break;
+                        case ObjectType.Unit:
+                            Unit unit = new Unit();
+                            unit.view = gameObject;
+                            unit.gridObjectData = _gridObjectData;
+                            unit.gridPivot = _placementPivot;
+                            GridManager.Instance.grid.PlaceOnGrid(gridPoint, _gridObjectData.size, unit);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
 
                 else
@@ -75,7 +98,6 @@ public class GridObjectView : MonoBehaviour
                     Destroy(gameObject);
                 }
             }
-            
         }
     }
 }
