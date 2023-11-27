@@ -2432,6 +2432,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 178619812540684960, guid: cf988cfdf907f9b43bb80ae098b4ee60, type: 3}
+      propertyPath: gridObjectData
+      value: 
+      objectReference: {fileID: 11400000, guid: a6006236ebc638246bade8c9018b03db, type: 2}
     - target: {fileID: 178619812540684971, guid: cf988cfdf907f9b43bb80ae098b4ee60, type: 3}
       propertyPath: m_Name
       value: ProductionButton

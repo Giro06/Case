@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 
-public class Unit : GridObject, IMoveable
+public class Unit : GridObject, IMoveable, IDamagable, IAttacker
 {
+    public int attackDamage;
+
     public void Move(Vector2Int pos)
     {
         var data = GridManager.Instance.grid.grid[gridPivot.x, gridPivot.y];
@@ -16,5 +18,20 @@ public class Unit : GridObject, IMoveable
     public Vector2Int GetCurrentPosition()
     {
         return gridPivot;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            GridManager.Instance.grid.grid[gridPivot.x, gridPivot.y] = new Cell();
+            Object.Destroy(view);
+        }
+    }
+
+    public int GetAttackPower()
+    {
+        return attackDamage;
     }
 }

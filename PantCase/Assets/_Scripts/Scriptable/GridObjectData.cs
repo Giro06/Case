@@ -3,15 +3,16 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "GridObjectData", menuName = "BuildingData", order = 0)]
+[CreateAssetMenu(fileName = "GridObjectData", menuName = "GridObjectData", order = 0)]
 public class GridObjectData : ScriptableObject
 {
     public Sprite sprite;
     public Vector2Int size;
     public ObjectType objectType;
+    public Stats stats;
 
     [ShowIf("objectType", ObjectType.ActiveBuilding)]
-    public List<GridObjectData> productionData;
+    public ProductionData productionData;
 }
 
 public enum ObjectType

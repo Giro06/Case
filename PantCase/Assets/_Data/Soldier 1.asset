@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e4540858623b419fa84ca29a92bde54f, type: 3}
-  m_Name: Barrack
+  m_Name: Soldier 1
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 4056ac4374fafeb41a8c57e41f173ac4, type: 3}
-  size: {x: 4, y: 4}
-  objectType: 0
-  stats: {fileID: 11400000, guid: 1cf38be998575bf4d86cdbaada85f587, type: 2}
-  productionData: {fileID: 11400000, guid: 3b85726966530c0458e5d7a1bae4d2d6, type: 2}
+  sprite: {fileID: 21300000, guid: 72594ae58ce1e5846859e81f023be1f3, type: 3}
+  size: {x: 1, y: 1}
+  objectType: 2
+  stats: {fileID: 11400000, guid: 162a7076e6865e54f9181c7047b4711e, type: 2}
+  productionData: {fileID: 0}

@@ -67,10 +67,11 @@ public class GridObjectView : MonoBehaviour
                     {
                         case ObjectType.ActiveBuilding:
                             ActiveBuilding activeBuilding = new ActiveBuilding();
-                            activeBuilding.productionData = _gridObjectData.productionData;
+                            activeBuilding.productionData = _gridObjectData.productionData.productionData;
                             activeBuilding.view = gameObject;
                             activeBuilding.gridObjectData = _gridObjectData;
                             activeBuilding.gridPivot = _placementPivot;
+                            activeBuilding.health = _gridObjectData.stats.health;
                             GridManager.Instance.grid.PlaceOnGrid(gridPoint, _gridObjectData.size, activeBuilding);
 
                             break;
@@ -79,6 +80,7 @@ public class GridObjectView : MonoBehaviour
                             passiveBuilding.view = gameObject;
                             passiveBuilding.gridObjectData = _gridObjectData;
                             passiveBuilding.gridPivot = _placementPivot;
+                            passiveBuilding.health = _gridObjectData.stats.health;
                             GridManager.Instance.grid.PlaceOnGrid(gridPoint, _gridObjectData.size, passiveBuilding);
                             break;
                         case ObjectType.Unit:
@@ -86,6 +88,8 @@ public class GridObjectView : MonoBehaviour
                             unit.view = gameObject;
                             unit.gridObjectData = _gridObjectData;
                             unit.gridPivot = _placementPivot;
+                            unit.health = _gridObjectData.stats.health;
+                            unit.attackDamage = _gridObjectData.stats.damage;
                             GridManager.Instance.grid.PlaceOnGrid(gridPoint, _gridObjectData.size, unit);
                             break;
                         default:

@@ -15,6 +15,8 @@ public class InputManager : Singleton<MonoBehaviour>
     {
         if (Input.GetMouseButtonDown(0))
         {
+            #region Selection
+
             if (!_isSelected)
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -56,51 +58,73 @@ public class InputManager : Singleton<MonoBehaviour>
                     }
                 }
             }
+
+            #endregion
+
             else
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                Vector3 mousePos = Extension.RayToPointAtZ(ray, 0);
+                _isSelected = false;
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1) && _isSelected)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Vector3 mousePos = Extension.RayToPointAtZ(ray, 0);
 
 
-                switch (_selectedObjectType)
-                {
-                    case ObjectType.ActiveBuilding:
-                    case ObjectType.PassiveBuilding:
+            switch (_selectedObjectType)
+            {
+                case ObjectType.ActiveBuilding:
+                case ObjectType.PassiveBuilding:
 
-                        if (GridManager.Instance.grid.IsInGrid(mousePos))
+
+                    if (GridManager.Instance.grid.IsInGrid(mousePos))
+                    {
+                        Vector2Int gridPos = GridManager.Instance.grid.GetGridPosition(mousePos);
+
+                        if (!GridManager.Instance.grid.grid[gridPos.x, gridPos.y].CanMove())
                         {
-                            Vector2Int gridPos = GridManager.Instance.grid.GetGridPosition(mousePos);
-
-                            if (!GridManager.Instance.grid.grid[gridPos.x, gridPos.y].CanMove())
-                            {
-                                _isSelected = false;
-                            }
+                            _isSelected = false;
                         }
+                    }
 
-                        break;
-                    case ObjectType.Unit:
-                        Unit unit = (Unit)_selectedGridObject;
+                    break;
+                case ObjectType.Unit:
 
-                        if (GridManager.Instance.grid.IsInGrid(mousePos))
+
+                    Unit unit = (Unit)_selectedGridObject;
+
+                    if (GridManager.Instance.grid.IsInGrid(mousePos))
+                    {
+                        Vector2Int gridPos = GridManager.Instance.grid.GetGridPosition(mousePos);
+                        var canPlace = GridManager.Instance.grid.CanPlaceOnGrid(gridPos, unit.gridObjectData.size);
+
+                        if (canPlace)
                         {
-                            Vector2Int gridPos = GridManager.Instance.grid.GetGridPosition(mousePos);
-                            var canPlace = GridManager.Instance.grid.CanPlaceOnGrid(gridPos, unit.gridObjectData.size);
-
-                            if (canPlace)
-                            {
-                                MovementManager.Instance.AddMoveable(unit, gridPos);
-                                _isSelected = false;
-                            }
-                            else
-                            {
-                                _isSelected = false;
-                            }
+                            MovementManager.Instance.AddMoveable(unit, gridPos);
+                            _isSelected = false;
                         }
+                        else
+                        {
+                            //There is something  check can attack 
 
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                            var gridObject = GridManager.Instance.grid.grid[gridPos.x, gridPos.y].CellObject as IDamagable;
+
+                            if (gridObject != null)
+                            {
+                                var attacker = _selectedGridObject as IAttacker;
+                                gridObject.TakeDamage(unit.GetAttackPower());
+                                Debug.Log("Attacked " + gridObject + " with " + attacker + " for " + attacker.GetAttackPower() + " damage");
+                            }
+
+                            _isSelected = false;
+                        }
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

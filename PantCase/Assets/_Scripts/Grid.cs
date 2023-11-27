@@ -100,6 +100,18 @@ public class Grid
         }
     }
 
+    public void CleanOnGrid(Vector2Int gridPivot, Vector2Int size)
+    {
+        for (int x = gridPivot.x; x < gridPivot.x + size.x; x++)
+        {
+            for (int y = gridPivot.y; y < gridPivot.y + size.y; y++)
+            {
+                grid[x, y].CellObject = null;
+                grid[x, y].CellState = CellState.Empty;
+            }
+        }
+    }
+
     public void SetCell(Vector2Int gridPos, GridObject cellObject)
     {
         grid[gridPos.x, gridPos.y].CellObject = cellObject;
