@@ -46,6 +46,20 @@ public class Grid
         }
     }
 
+    public bool IsInGrid(Vector2Int gridPos)
+    {
+        Vector2Int gridPosition = gridPos;
+
+        if (gridPosition.x < 0 || gridPosition.x >= width || gridPosition.y < 0 || gridPosition.y >= height)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     public Vector3 GetWorldPosition(int x, int y)
     {
         return new Vector3(x, y, 0) * cellSize + new Vector3(cellSize, cellSize, 0) * 0.5f;
@@ -135,6 +149,55 @@ public class Grid
 
 
                 Gizmos.DrawWireCube(GetWorldPosition(x, y), Vector3.one * (cellSize));
+            }
+        }
+    }
+
+    public Vector2Int FindClosestEmptyPoint(Vector2Int targetPoint)
+    {
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+
+        queue.Enqueue(targetPoint);
+        visited.Add(targetPoint);
+
+        while (queue.Count > 0)
+        {
+            Vector2Int current = queue.Dequeue();
+
+            if (grid[current.x, current.y].CellState == CellState.Empty && grid[current.x, current.y].CanMove())
+            {
+                return current; // Found the closest empty point.
+            }
+
+            // Check neighbors
+            foreach (Vector2Int neighbor in GetNeighbors(current))
+            {
+                if (!visited.Contains(neighbor))
+                {
+                    visited.Add(neighbor);
+                    queue.Enqueue(neighbor);
+                }
+            }
+        }
+
+        // If no empty point is found, return an invalid position or handle it based on your needs.
+        return new Vector2Int(-1, -1);
+    }
+
+    private IEnumerable<Vector2Int> GetNeighbors(Vector2Int position)
+    {
+        // Define possible neighbors (up, down, left, right).
+        Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+        foreach (Vector2Int dir in directions)
+        {
+            Vector2Int neighbor = position + dir;
+
+            // Check if the neighbor is within the grid boundaries.
+            if (IsInGrid(neighbor))
+            {
+                yield return neighbor;
             }
         }
     }

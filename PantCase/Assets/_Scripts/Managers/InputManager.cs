@@ -11,9 +11,21 @@ public class InputManager : Singleton<MonoBehaviour>
     private GridObject _selectedGridObject;
     private ObjectType _selectedObjectType;
 
+
+    public void Start()
+    {
+        EventManager.Instance.OnSelectedSpawn += SpawnSelected;
+    }
+
+    private void SpawnSelected(GridObjectData obj)
+    {
+        IProducer producer = (IProducer)_selectedGridObject;
+        producer.Spawn(obj);
+    }
+
     public void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !Extension.IsPointerOverUIElement())
         {
             #region Selection
 
@@ -63,11 +75,11 @@ public class InputManager : Singleton<MonoBehaviour>
 
             else
             {
-                _isSelected = false;
+                UnSelected();
             }
         }
 
-        if (Input.GetMouseButtonDown(1) && _isSelected)
+        if (Input.GetMouseButtonDown(1) && _isSelected && !Extension.IsPointerOverUIElement())
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Vector3 mousePos = Extension.RayToPointAtZ(ray, 0);
@@ -85,7 +97,7 @@ public class InputManager : Singleton<MonoBehaviour>
 
                         if (!GridManager.Instance.grid.grid[gridPos.x, gridPos.y].CanMove())
                         {
-                            _isSelected = false;
+                            UnSelected();
                         }
                     }
 
@@ -103,7 +115,7 @@ public class InputManager : Singleton<MonoBehaviour>
                         if (canPlace)
                         {
                             MovementManager.Instance.AddMoveable(unit, gridPos);
-                            _isSelected = false;
+                            UnSelected();
                         }
                         else
                         {
@@ -118,7 +130,7 @@ public class InputManager : Singleton<MonoBehaviour>
                                 Debug.Log("Attacked " + gridObject + " with " + attacker + " for " + attacker.GetAttackPower() + " damage");
                             }
 
-                            _isSelected = false;
+                            UnSelected();
                         }
                     }
 
@@ -134,5 +146,18 @@ public class InputManager : Singleton<MonoBehaviour>
         _selectedGridObject = gridObject;
         _selectedObjectType = objectType;
         _isSelected = true;
+        _selectedGridObject.view.spriteRenderer.color = Color.green;
+
+        if (_selectedObjectType == ObjectType.ActiveBuilding)
+        {
+            EventManager.Instance.ProducerSelected(gridObject as IProducer, gridObject.gridObjectData);
+        }
+    }
+
+    public void UnSelected()
+    {
+        _selectedGridObject.view.spriteRenderer.color = Color.white;
+        _isSelected = false;
+        EventManager.Instance.UnSelected();
     }
 }

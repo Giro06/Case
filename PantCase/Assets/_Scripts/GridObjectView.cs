@@ -60,41 +60,7 @@ public class GridObjectView : MonoBehaviour
             {
                 if (canPlace)
                 {
-                    _placementPivot = gridPoint;
-                    followCursor = false;
-
-                    switch (_gridObjectData.objectType)
-                    {
-                        case ObjectType.ActiveBuilding:
-                            ActiveBuilding activeBuilding = new ActiveBuilding();
-                            activeBuilding.productionData = _gridObjectData.productionData.productionData;
-                            activeBuilding.view = gameObject;
-                            activeBuilding.gridObjectData = _gridObjectData;
-                            activeBuilding.gridPivot = _placementPivot;
-                            activeBuilding.health = _gridObjectData.stats.health;
-                            GridManager.Instance.grid.PlaceOnGrid(gridPoint, _gridObjectData.size, activeBuilding);
-
-                            break;
-                        case ObjectType.PassiveBuilding:
-                            PassiveBuilding passiveBuilding = new PassiveBuilding();
-                            passiveBuilding.view = gameObject;
-                            passiveBuilding.gridObjectData = _gridObjectData;
-                            passiveBuilding.gridPivot = _placementPivot;
-                            passiveBuilding.health = _gridObjectData.stats.health;
-                            GridManager.Instance.grid.PlaceOnGrid(gridPoint, _gridObjectData.size, passiveBuilding);
-                            break;
-                        case ObjectType.Unit:
-                            Unit unit = new Unit();
-                            unit.view = gameObject;
-                            unit.gridObjectData = _gridObjectData;
-                            unit.gridPivot = _placementPivot;
-                            unit.health = _gridObjectData.stats.health;
-                            unit.attackDamage = _gridObjectData.stats.damage;
-                            GridManager.Instance.grid.PlaceOnGrid(gridPoint, _gridObjectData.size, unit);
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    Place(gridPoint);
                 }
 
                 else
@@ -102,6 +68,46 @@ public class GridObjectView : MonoBehaviour
                     Destroy(gameObject);
                 }
             }
+        }
+    }
+
+    public void Place(Vector2Int gridPoint)
+    {
+        _placementPivot = gridPoint;
+        followCursor = false;
+        spriteRenderer.color = Color.white;
+        switch (_gridObjectData.objectType)
+        {
+            case ObjectType.ActiveBuilding:
+                ActiveBuilding activeBuilding = new ActiveBuilding();
+                activeBuilding.productionData = _gridObjectData.productionData.productionData;
+                activeBuilding.view = this;
+                activeBuilding.gridObjectData = _gridObjectData;
+                activeBuilding.gridPivot = _placementPivot;
+                activeBuilding.health = _gridObjectData.stats.health;
+                GridManager.Instance.grid.PlaceOnGrid(gridPoint, _gridObjectData.size, activeBuilding);
+                activeBuilding.spawnPoint = GridManager.Instance.grid.FindClosestEmptyPoint(gridPoint);
+
+                break;
+            case ObjectType.PassiveBuilding:
+                PassiveBuilding passiveBuilding = new PassiveBuilding();
+                passiveBuilding.view = this;
+                passiveBuilding.gridObjectData = _gridObjectData;
+                passiveBuilding.gridPivot = _placementPivot;
+                passiveBuilding.health = _gridObjectData.stats.health;
+                GridManager.Instance.grid.PlaceOnGrid(gridPoint, _gridObjectData.size, passiveBuilding);
+                break;
+            case ObjectType.Unit:
+                Unit unit = new Unit();
+                unit.view = this;
+                unit.gridObjectData = _gridObjectData;
+                unit.gridPivot = _placementPivot;
+                unit.health = _gridObjectData.stats.health;
+                unit.attackDamage = _gridObjectData.stats.damage;
+                GridManager.Instance.grid.PlaceOnGrid(gridPoint, _gridObjectData.size, unit);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 }
