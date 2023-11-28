@@ -24,7 +24,7 @@ public class ActiveBuilding : GridObject, IProducer, IDamagable
 
     public void Spawn(GridObjectData gridObjectData)
     {
-        Vector2Int getClosestEmptyPoint = GridManager.Instance.grid.FindClosestEmptyPoint(gridPivot);
+        Vector2Int getClosestEmptyPoint = GridManager.Instance.grid.FindClosestEmptyPoint(GetSpawnPoint());
         GameManager.Instance.CreateSoldier(gridObjectData, getClosestEmptyPoint);
         
     }

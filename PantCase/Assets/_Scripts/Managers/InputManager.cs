@@ -88,6 +88,31 @@ public class InputManager : Singleton<MonoBehaviour>
             switch (_selectedObjectType)
             {
                 case ObjectType.ActiveBuilding:
+
+                    IProducer producer = _selectedGridObject as IProducer;
+                    Vector2Int gridPoint = GridManager.Instance.grid.GetGridPosition(mousePos);
+
+                    if (GridManager.Instance.grid.IsInGrid(mousePos))
+                    {
+                        if (GridManager.Instance.grid.grid[gridPoint.x, gridPoint.y].CanMove())
+                        {
+                            producer.SetSpawnPoint(gridPoint);
+                            Debug.Log("Set spawn point to: " + gridPoint);
+                        }
+                    }
+
+                    if (GridManager.Instance.grid.IsInGrid(mousePos))
+                    {
+                        Vector2Int gridPos = GridManager.Instance.grid.GetGridPosition(mousePos);
+
+                        if (!GridManager.Instance.grid.grid[gridPos.x, gridPos.y].CanMove())
+                        {
+                            UnSelected();
+                        }
+                    }
+
+                    break;
+
                 case ObjectType.PassiveBuilding:
 
 
