@@ -25,8 +25,8 @@ public class Unit : GridObject, IMoveable, IDamagable, IAttacker
         health -= damage;
         if (health <= 0)
         {
+            view.Destroy();
             GridManager.Instance.grid.grid[gridPivot.x, gridPivot.y] = new Cell();
-            Object.Destroy(view);
         }
     }
 

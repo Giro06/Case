@@ -22,8 +22,11 @@ public class InGameUI : MonoBehaviour
 
     public void OnDestroy()
     {
-        EventManager.Instance.OnSetSelected -= SetSelected;
-        EventManager.Instance.OnUnSetSelected -= CloseInformationPanel;
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.OnSetSelected -= SetSelected;
+            EventManager.Instance.OnUnSetSelected -= CloseInformationPanel;
+        }
     }
 
     public void SetSelected(IProducer producer, GridObjectData gridObjectData)

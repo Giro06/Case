@@ -71,6 +71,11 @@ public class GridObjectView : MonoBehaviour
         }
     }
 
+    public void Destroy()
+    {
+        Destroy(gameObject);
+    }
+
     public void Place(Vector2Int gridPoint)
     {
         _placementPivot = gridPoint;

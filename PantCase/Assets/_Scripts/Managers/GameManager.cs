@@ -15,7 +15,10 @@ public class GameManager : Singleton<GameManager>
 
     public void OnDisable()
     {
-        EventManager.Instance.OnCreateGameView -= CreateGridObjectView;
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.OnCreateGameView -= CreateGridObjectView;
+        }
     }
 
     public void CreateGridObjectView(GridObjectData gridObjectData)

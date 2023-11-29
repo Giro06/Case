@@ -26,7 +26,6 @@ public class ActiveBuilding : GridObject, IProducer, IDamagable
     {
         Vector2Int getClosestEmptyPoint = GridManager.Instance.grid.FindClosestEmptyPoint(GetSpawnPoint());
         GameManager.Instance.CreateSoldier(gridObjectData, getClosestEmptyPoint);
-        
     }
 
     public void TakeDamage(int damage)
@@ -34,8 +33,8 @@ public class ActiveBuilding : GridObject, IProducer, IDamagable
         health -= damage;
         if (health <= 0)
         {
+            view.Destroy();
             GridManager.Instance.grid.CleanOnGrid(gridPivot, gridObjectData.size);
-            Object.Destroy(view);
         }
     }
 }

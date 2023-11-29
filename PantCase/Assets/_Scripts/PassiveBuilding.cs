@@ -7,8 +7,8 @@ public class PassiveBuilding : GridObject, IDamagable
         health -= damage;
         if (health <= 0)
         {
+            view.Destroy();
             GridManager.Instance.grid.CleanOnGrid(gridPivot, gridObjectData.size);
-            Object.Destroy(view);
         }
     }
 }
